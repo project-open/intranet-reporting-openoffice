@@ -677,7 +677,6 @@ ad_proc im_oo_page_type_repeat {
 ad_proc im_oo_page_type_list {
     -page_node:required
     -insert_node:required
-    -page_node:required
     -parameters:required
     {-locale ""}
     {-list_sql ""}
