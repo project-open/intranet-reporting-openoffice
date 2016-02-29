@@ -44,7 +44,7 @@ foreach template_path $template_path_list {
 
 foreach path $pathes {
     set files ""
-    catch { set files [exec $find_cmd $path -noleaf -type f] }
+    catch { set files [exec $find_cmd $path -noleaf -maxdepth 1 -type f] }
     foreach file $files {
 
 	set file_name [lindex [split $file "/"] end]

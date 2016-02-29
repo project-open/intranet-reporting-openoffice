@@ -292,15 +292,13 @@ ad_proc im_oo_page_extract_templates {
 			# <draw:text-box><text:p><text:span text:style-name="T8">?</text:span></text:p></draw:text-box>
 			# <svg:title>green_square</svg:title>
 			# </draw:frame>
-			set span_node [im_oo_select_nodes $child "text:span"]
-			set span_xml [$span_node asXML]
-			# <text:span text:style-name="T8">?</text:span>
-			ns_log Notice "im_oo_page_extract_templates: $title=$span_xml"
-			if {[regexp {<(.*)>([^<>]*)<(.*)>} $span_xml match tag text end_tag]} {
-			    set span_rev_xml "<$end_tag><$tag>$text"
-			    ns_log Notice "im_oo_page_extract_templates: $title=$span_rev_xml"
-			    set hash($title) $span_rev_xml
+			set node_type "draw:text-box"
+			set span_node [im_oo_select_nodes $child $node_type]
+			if {"" eq $span_node} {
+			    ns_log Warning "im_oo_page_extract_templates: $title=$title: Did not find node_type=$node_type"
+			    continue
 			}
+			set hash($title) [$span_node asXML]
 		    }
 		    green_bar - yellow_bar - red_bar - today_bar {
 			# Groupings used as templates for Gantt bars.
@@ -710,8 +708,10 @@ ad_proc im_oo_page_type_list {
     # Number formatting
     if {"" == $locale} { set locale [lang::user::locale] }
     set rounding_precision 2
-
+   
     array set param_hash $parameters
+#    ad_return_complaint 1 "im_oo_page_type_list: <pre>[ns_quotehtml $parameters]</pre>"
+
     # fraber 120517: We expect that a template page went before...
     # array set param_hash [im_oo_page_extract_templates -page_node $page_node]
     foreach var [array names param_hash] { set $var $param_hash($var) }
@@ -1311,6 +1311,7 @@ ad_proc im_oo_page_type_gantt {
 	set first_page_p 1
 	if {[catch {
 	    db_foreach list_sql $list_sql {
+		ns_log Error "im_oo_page_type_gantt: looping through list_sql"
 
 		if {"" == $start_date_epoch || "" == $end_date_epoch} {
 		    ns_log Error "im_oo_page_type_gantt: Found entry with empty start_date_epoch or $end_date_epoch"
@@ -1332,6 +1333,7 @@ ad_proc im_oo_page_type_gantt {
 			    eval [template::adp_compile -string $page_xml]
 			    set xml $__adp_output
 			} err_msg]} {
+			    ns_log Error "im_oo_page_type_gantt: '$page_name': Error substituting variables</b>: $err_msg"
 			    ad_return_complaint 1 "<b>Gantt: '$page_name': Error substituting variables</b>:<pre>$err_msg</pre><br><pre>[ad_print_stack_trace]</pre>"
 			    ad_script_abort
 			}
