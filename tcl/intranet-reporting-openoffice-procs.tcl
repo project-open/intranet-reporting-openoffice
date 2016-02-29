@@ -509,7 +509,6 @@ ad_proc im_oo_page_list {
 ad_proc im_oo_page_type_constant {
     -page_node:required
     -insert_node:required
-    -page_node:required
     -parameters:required
     {-list_sql ""}
     {-page_sql "" }
@@ -538,7 +537,6 @@ ad_proc im_oo_page_type_constant {
 ad_proc im_oo_page_type_template {
     -page_node:required
     -insert_node:required
-    -page_node:required
     -parameters:required
     {-list_sql ""}
     {-page_sql "" }
@@ -558,7 +556,6 @@ ad_proc im_oo_page_type_template {
 ad_proc im_oo_page_type_static {
     -page_node:required
     -insert_node:required
-    -page_node:required
     -parameters:required
     {-list_sql ""}
     {-page_sql "" }
@@ -619,7 +616,6 @@ ad_proc im_oo_page_type_static {
 ad_proc im_oo_page_type_repeat {
     -page_node:required
     -insert_node:required
-    -page_node:required
     -page_sub_nodes:required
     -parameters:required
     -page_name:required
@@ -1225,7 +1221,6 @@ ad_proc im_oo_page_type_gantt_move_scale {
 ad_proc im_oo_page_type_gantt {
     -page_node:required
     -insert_node:required
-    -page_node:required
     -parameters:required
     {-list_sql ""}
     {-page_sql "" }
