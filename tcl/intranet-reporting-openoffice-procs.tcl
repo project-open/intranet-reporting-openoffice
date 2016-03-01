@@ -1306,7 +1306,7 @@ ad_proc im_oo_page_type_gantt {
 	set first_page_p 1
 	if {[catch {
 	    db_foreach list_sql $list_sql {
-		ns_log Error "im_oo_page_type_gantt: looping through list_sql"
+		ns_log Notice "im_oo_page_type_gantt: looping through list_sql"
 
 		if {"" == $start_date_epoch || "" == $end_date_epoch} {
 		    ns_log Error "im_oo_page_type_gantt: Found entry with empty start_date_epoch or $end_date_epoch"

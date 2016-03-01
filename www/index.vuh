@@ -145,15 +145,21 @@ set odp_template_body [lindex $odp_template_pieces end]
 
 # Create a temporary directory for our contents
 set odp_tmp_path [ns_tmpnam]
-ns_mkdir $odp_tmp_path
+ns_log Notice "index.vuh: before ns_mkdir $odp_tmp_path"
+#ns_mkdir $odp_tmp_path
+file mkdir $odp_tmp_path
 
 set odp_zip "${odp_tmp_path}.odp"
 set odp_content "${odp_tmp_path}/content.xml"
 set odp_styles "${odp_tmp_path}/styles.xml"
 
-ns_cp $odp_template_file $odp_zip
+ns_log Notice "index.vuh: before ns_cp $odp_template_file $odp_zip"
+#ns_cp $odp_template_file $odp_zip
+file copy $odp_template_file $odp_zip
+file attributes $odp_zip -permissions 00660
 
 # Unzip the odp into the temorary directory
+ns_log Notice "index.vuh: before exec unzip -d $odp_tmp_path $odp_zip"
 exec unzip -d $odp_tmp_path $odp_zip
 
 # Read the content.xml file
@@ -186,7 +192,7 @@ set page_cnt 0
 while {$page_cnt < [llength $odp_page_template_nodes]} {
     ns_log Notice "index.vuh: cnt=$cnt, page_cnt=$page_cnt"
     incr cnt
-    if {$cnt > 100} { ad_return_complaint 1 1 }
+    if {$cnt > 100} { ad_return_complaint 1 "index.vuh: Delivered >100 pages" }
 
     # Extract page type and page name.
     set page_node [lindex $odp_page_template_nodes $page_cnt]
@@ -283,7 +289,11 @@ close $file
 
 # The zip -j command replaces the specified file in the zipfile
 # which happens to be the OpenOffice File.
+
+ns_log Notice "index.vuh: before exec zip -j $odp_zip $odp_content"
 exec zip -j $odp_zip $odp_content
+
+ns_log Notice "index.vuh: before exec zip -j $odp_zip $odp_styles"
 exec zip -j $odp_zip $odp_styles
 
 db_release_unused_handles
@@ -293,6 +303,7 @@ db_release_unused_handles
 # Return the file
 # ---------------------------------------------------------------
 
+ns_log Notice "index.vuh: before returning document"
 set outputheaders [ns_conn outputheaders]
 ns_set cput $outputheaders "Content-Disposition" "attachment; filename=${odp_template_body}"
 ns_returnfile 200 application/odp $odp_zip
@@ -308,5 +319,12 @@ ns_returnfile 200 application/odp $odp_zip
 # ns_unlink "${dir}/$style.xml"
 # ns_unlink "${dir}/document.odf"
 # ns_rmdir $dir
+
+ns_log Notice "index.vuh: before file delete $odp_zip"
+file delete -force $odp_zip
+
+ns_log Notice "index.vuh: before file delete $odp_tmp_path"
+file delete -force $odp_tmp_path
+
 ad_script_abort
 
