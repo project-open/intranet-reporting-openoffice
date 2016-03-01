@@ -11,6 +11,19 @@ ad_library {
 
 
 # ----------------------------------------------------------------------
+# Add links to the list of menus in /intranet/projects/index
+# ----------------------------------------------------------------------
+
+ad_proc -public im_oo_cmd_executable_p { } {
+    Returns the path of the executable OpenOffice binary
+    of "" if there is no such executable
+} {
+    set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
+    set oo_cmd_executable_p [util_memoize [list file executable $oo_cmd]]
+    return $oo_cmd_executable_p
+}
+
+# ----------------------------------------------------------------------
 # Auxillary Functions
 # ----------------------------------------------------------------------
 

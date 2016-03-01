@@ -112,7 +112,7 @@ if {"" == $url_file_ext || "tcl" == $url_file_ext || "adp" == $url_file_ext} {
 # Look for an OO.oo tempate
 # ---------------------------------------------------------------
 
-if {"" == $url_file_ext || "odp" == $url_file_ext} {
+if {"" == $url_file_ext || "odp" == $url_file_ext || "ppt" == $url_file_ext || "pptx" == $url_file_ext} {
 
     set template_files {}
     foreach path $template_path_list {
@@ -302,6 +302,15 @@ db_release_unused_handles
 # ---------------------------------------------------------------
 # Return the file
 # ---------------------------------------------------------------
+
+if {"ppt" == $url_file_ext || "pptx" == $url_file_ext} {
+
+    set $oo_cmd set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
+    exec $oo_cmd --headless --convert-to pptx $odp_zip
+    
+    set odp_zip "${odp_tmp_path}.pptx"
+}
+
 
 ns_log Notice "index.vuh: before returning document"
 set outputheaders [ns_conn outputheaders]
