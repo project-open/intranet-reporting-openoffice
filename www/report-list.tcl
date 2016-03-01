@@ -70,7 +70,10 @@ foreach file_name [array names hash] {
 	    # Check if there is a .tcl version of this file
 	    set tcl_file_name "$file_body.tcl"
 	    if {[info exists hash($tcl_file_name)]} { continue }
-	    template::multirow append reports $file_name "$base_url/$file_name"
+	    template::multirow append reports "${file_body}.odp" "$base_url/${file_body}.odp"
+	    if {[im_oo_cmd_executable_p]} {
+		template::multirow append reports "${file_body}.pptx" "$base_url/${file_body}.pptx"
+	    }
 	}
 	tcl {
 	    template::multirow append reports $file_name "$base_url/$file_body"

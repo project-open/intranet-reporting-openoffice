@@ -117,6 +117,7 @@ if {"" == $url_file_ext || "odp" == $url_file_ext || "ppt" == $url_file_ext || "
     set template_files {}
     foreach path $template_path_list {
 	lappend template_files "${path}/${url_file}"
+	lappend template_files "${path}/${url_file_body}.odp"
 	lappend template_files "${path}/${url_file}.odp"
     }
 
@@ -152,6 +153,7 @@ file mkdir $odp_tmp_path
 set odp_zip "${odp_tmp_path}.odp"
 set odp_content "${odp_tmp_path}/content.xml"
 set odp_styles "${odp_tmp_path}/styles.xml"
+
 
 ns_log Notice "index.vuh: before ns_cp $odp_template_file $odp_zip"
 #ns_cp $odp_template_file $odp_zip
@@ -305,7 +307,8 @@ db_release_unused_handles
 
 if {"ppt" == $url_file_ext || "pptx" == $url_file_ext} {
 
-    set $oo_cmd set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
+    set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
+    ns_log Notice "index.vuh: before exec $oo_cmd --headless --convert-to pptx $odp_zip"
     exec $oo_cmd --headless --convert-to pptx $odp_zip
     
     set odp_zip "${odp_tmp_path}.pptx"
