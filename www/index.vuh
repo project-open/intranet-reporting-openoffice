@@ -16,6 +16,7 @@ set user_locale [lang::user::locale]
 set date_format "YYYY-MM-DD"
 set currency_format [im_l10n_sql_currency_format]
 set number_format $currency_format
+set whoami [exec whoami]
 
 
 set page_title [lang::message::lookup "" intranet-reporting-openoffice.Program_Overview "Program Overview"]
@@ -142,7 +143,9 @@ if {"" == $odp_template_file} {
 # ---------------------------------------------------------------
 
 set odp_template_pieces [split $odp_template_file "/"]
-set odp_template_body [lindex $odp_template_pieces end]
+set odp_template_filename [lindex $odp_template_pieces end]
+set odp_template_filename_pieces [split $odp_template_filename "."]
+set odp_template_filename_body [join [lrange $odp_template_filename_pieces 0 end-1] "."]
 
 # Create a temporary directory for our contents
 set odp_tmp_path [ns_tmpnam]
@@ -307,17 +310,18 @@ db_release_unused_handles
 
 if {"ppt" == $url_file_ext || "pptx" == $url_file_ext} {
 
+
     set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
-    ns_log Notice "index.vuh: before exec $oo_cmd --headless --convert-to pptx $odp_zip"
-    exec $oo_cmd --headless --convert-to pptx $odp_zip
+    exec bash -l -c "export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip"
     
-    set odp_zip "${odp_tmp_path}.pptx"
+    set odp_zip "${odp_tmp_path}.$url_file_ext"
+    set odp_template_filename "${odp_template_filename_body}.$url_file_ext"
 }
 
 
 ns_log Notice "index.vuh: before returning document"
 set outputheaders [ns_conn outputheaders]
-ns_set cput $outputheaders "Content-Disposition" "attachment; filename=${odp_template_body}"
+ns_set cput $outputheaders "Content-Disposition" "attachment; filename=${odp_template_filename}"
 ns_returnfile 200 application/odp $odp_zip
 
 
@@ -333,10 +337,10 @@ ns_returnfile 200 application/odp $odp_zip
 # ns_rmdir $dir
 
 ns_log Notice "index.vuh: before file delete $odp_zip"
-file delete -force $odp_zip
+# file delete -force $odp_zip
 
 ns_log Notice "index.vuh: before file delete $odp_tmp_path"
-file delete -force $odp_tmp_path
+# file delete -force $odp_tmp_path
 
 ad_script_abort
 
