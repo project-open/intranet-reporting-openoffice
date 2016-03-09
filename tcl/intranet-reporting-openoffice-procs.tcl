@@ -1200,7 +1200,6 @@ ad_proc im_oo_page_type_gantt_move_scale {
 	# Delete the "svg:title" tag. Tags are used to identify
 	# template nodes, which need to be deleted afterwards
 	set name [$child nodeName]
-	ns_log Notice "xxx: name='$name'"
 	if {"svg:title" == $name} { [$child parentNode] removeChild $child }
 
 	# Move the element to the right x/y position
