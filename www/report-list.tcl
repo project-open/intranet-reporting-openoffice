@@ -19,12 +19,8 @@ ad_page_contract {
 set current_user_id [ad_maybe_redirect_for_registration]
 set page_title [lang::message::lookup "" intranet-reporting-openoffice.Report_List "List of available OpenOffice Reports"]
 set context_bar [im_context_bar $page_title]
-
 set find_cmd [im_filestorage_find_cmd]
-
-# Determine the template
-set pageroot [ns_info pageroot]
-set serverroot [join [lrange [split $pageroot "/"] 0 end-1] "/"]
+set serverroot [acs_root_dir]
 
 # Package template path
 set template_path_list [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "TemplatePathList" -default "/filestorage/templates /packages/intranet-reporting-openoffice/templates /packages/intranet-cust-santander/templates"]
