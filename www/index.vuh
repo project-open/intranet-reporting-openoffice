@@ -309,16 +309,21 @@ db_release_unused_handles
 
 if {"ppt" == $url_file_ext || "pptx" == $url_file_ext} {
 
-
     set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
+    ns_log Notice "index.vuh: returning ppt(x): url_file_ext=$url_file_ext, oo_cmd=$oo_cmd"
+    ns_log Notice "index.vuh: exec bash -l -c \"export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip\""
     exec bash -l -c "export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip"
     
     set odp_zip "${odp_tmp_path}.$url_file_ext"
     set odp_template_filename "${odp_template_filename_body}.$url_file_ext"
 }
 
+if {![file readable $odp_zip]} {
+    ad_return_complaint 1 "<b>Internal Error Creating Report</b>:<br>File=$odp_zip was not created.<br>Maybe you didn't install LibreOffice Impress?"
+}
 
-ns_log Notice "index.vuh: before returning document"
+
+ns_log Notice "index.vuh: before returning document odp_zip=$odp_zip"
 set outputheaders [ns_conn outputheaders]
 ns_set cput $outputheaders "Content-Disposition" "attachment; filename=${odp_template_filename}"
 ns_returnfile 200 application/odp $odp_zip
