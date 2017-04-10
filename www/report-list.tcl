@@ -19,7 +19,6 @@ ad_page_contract {
 set current_user_id [ad_maybe_redirect_for_registration]
 set page_title [lang::message::lookup "" intranet-reporting-openoffice.Report_List "List of available OpenOffice Reports"]
 set context_bar [im_context_bar $page_title]
-set find_cmd [im_filestorage_find_cmd]
 set serverroot [acs_root_dir]
 
 # Package template path
@@ -40,7 +39,7 @@ foreach template_path $template_path_list {
 
 foreach path $pathes {
     set files ""
-    catch { set files [im_exec $find_cmd $path -noleaf -maxdepth 1 -type f] }
+    catch { set files [im_exec find $path -noleaf -maxdepth 1 -type f] }
     foreach file $files {
 
 	set file_name [lindex [split $file "/"] end]
