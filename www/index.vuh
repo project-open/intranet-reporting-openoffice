@@ -166,7 +166,7 @@ ns_log Notice "index.vuh: before ns_cp $odp_template_file $odp_zip"
 file copy $odp_template_file $odp_zip
 
 # Set permissions - this doesn't work on Windows for some reason
-if {"windows" ne $platform {
+if {"windows" ne $platform} {
     file attributes $odp_zip -permissions 00660
 }
 
