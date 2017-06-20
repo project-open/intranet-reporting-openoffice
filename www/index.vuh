@@ -16,7 +16,7 @@ set user_locale [lang::user::locale]
 set date_format "YYYY-MM-DD"
 set currency_format [im_l10n_sql_currency_format]
 set number_format $currency_format
-set whoami [exec whoami]
+set whoami [im_exec whoami]
 
 
 set page_title [lang::message::lookup "" intranet-reporting-openoffice.Program_Overview "Program Overview"]
@@ -171,8 +171,8 @@ if {"windows" ne $platform} {
 }
 
 # Unzip the odp into the temorary directory
-ns_log Notice "index.vuh: before exec unzip -d $odp_tmp_path $odp_zip"
-exec unzip -d $odp_tmp_path $odp_zip
+ns_log Notice "index.vuh: before im_exec unzip -d $odp_tmp_path $odp_zip"
+im_exec unzip -d $odp_tmp_path $odp_zip
 
 # Read the content.xml file
 set file [open $odp_content]
@@ -302,11 +302,11 @@ close $file
 # The zip -j command replaces the specified file in the zipfile
 # which happens to be the OpenOffice File.
 
-ns_log Notice "index.vuh: before exec zip -j $odp_zip $odp_content"
-exec zip -j $odp_zip $odp_content
+ns_log Notice "index.vuh: before im_exec zip -j $odp_zip $odp_content"
+im_exec zip -j $odp_zip $odp_content
 
-ns_log Notice "index.vuh: before exec zip -j $odp_zip $odp_styles"
-exec zip -j $odp_zip $odp_styles
+ns_log Notice "index.vuh: before im_exec zip -j $odp_zip $odp_styles"
+im_exec zip -j $odp_zip $odp_styles
 
 db_release_unused_handles
 
@@ -319,8 +319,8 @@ if {"ppt" == $url_file_ext || "pptx" == $url_file_ext} {
 
     set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
     ns_log Notice "index.vuh: returning ppt(x): url_file_ext=$url_file_ext, oo_cmd=$oo_cmd"
-    ns_log Notice "index.vuh: exec bash -l -c \"export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip\""
-    exec bash -l -c "export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip"
+    ns_log Notice "index.vuh: im_exec bash -l -c \"export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip\""
+    im_exec bash -l -c "export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip"
     
     set odp_zip "${odp_tmp_path}.$url_file_ext"
     set odp_template_filename "${odp_template_filename_body}.$url_file_ext"
