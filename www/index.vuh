@@ -30,6 +30,10 @@ set long_dash [format "%c" 8211]
 # Determine the template
 set serverroot [acs_root_dir]
 
+global tcl_platform
+set platform $tcl_platform(platform)
+ns_log Notice "intranet-reporting-openoffice/index.vuh: platform=$platform"
+
 # Package template path
 set template_path_list [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "TemplatePathList" -default "/filestorage/templates /packages/intranet-reporting-openoffice/templates /packages/intranet-cust-santander/templates"]
 
@@ -160,7 +164,11 @@ set odp_styles "${odp_tmp_path}/styles.xml"
 ns_log Notice "index.vuh: before ns_cp $odp_template_file $odp_zip"
 #ns_cp $odp_template_file $odp_zip
 file copy $odp_template_file $odp_zip
-file attributes $odp_zip -permissions 00660
+
+# Set permissions - this doesn't work on Windows for some reason
+if {"windows" ne $platform {
+    file attributes $odp_zip -permissions 00660
+}
 
 # Unzip the odp into the temorary directory
 ns_log Notice "index.vuh: before exec unzip -d $odp_tmp_path $odp_zip"
