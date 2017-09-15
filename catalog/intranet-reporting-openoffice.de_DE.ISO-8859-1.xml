@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <message_catalog package_key="intranet-reporting-openoffice" locale="de_DE" charset="ISO-8859-1">
 
-  <msg key="Project_Phases___Risks__ODP_">Projektphasen &amp; Risiken (ODP)</msg>
-  <msg key="Project_Phases___Risks__PPTX_">Projektphasen &amp; Risiken (PPTX)</msg>
+  <msg key="Project_Phases___Risks__ODP_">Projektphasen &amp; -risiken (ODP)</msg>
+  <msg key="Project_Phases___Risks__PPTX_">Projektphasen &amp; -risiken (PPTX)</msg>
 </message_catalog>
