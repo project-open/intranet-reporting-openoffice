@@ -607,6 +607,7 @@ ad_proc im_oo_page_type_static {
 	    }
 	    
 	    # Parse the new slide and insert into OOoo document
+	    ns_log Notice "im_oo_page_type_static: xml=$xml"
 	    set doc [dom parse $xml]
 	    set doc_doc [$doc documentElement]
 
