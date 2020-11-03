@@ -45,11 +45,13 @@ ad_proc im_oo_tdom_explore {
     if {$type != "ELEMENT_NODE"} { return "$result\n" }
 
     # Create a key-value list of attributes behind the name of the tag
-    ns_log Notice "im_oo_tdom_explore: name=$name, type=$type, attrib=[$node attributes]"
+    ns_log Notice "im_oo_tdom_explore: name=$name, type=$type, attributes=[$node attributes]"
     set attribute_list {}
     foreach attrib [$node attributes] {
         # Pull out the attributes identified by name:namespace.
         set attrib_name [lindex $attrib 0]
+	ns_log Notice "im_oo_tdom_explore: attrib_name='$attrib_name'"
+	if {"xmlns" eq $attrib_name} { continue } else { ns_log Notice "im_oo_tdom_explore: attrib_name='$attrib_name' != 'xmsns'" }
 	set value [$node getAttribute $attrib]
         lappend attribute_list "$attrib_name=$value"
     }
