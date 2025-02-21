@@ -317,7 +317,7 @@ db_release_unused_handles
 
 if {"ppt" == $url_file_ext || "pptx" == $url_file_ext} {
 
-    set oo_cmd [parameter::get_from_package_key -package_key "intranet-reporting-openoffice" -parameter "OpenOfficeCmd" -default "/usr/bin/ooffice"]
+    set oo_cmd [parameter::get_from_package_key -package_key "intranet-core" -parameter "OpenOfficeCmd" -default "loffice"]
     ns_log Notice "index.vuh: returning ppt(x): url_file_ext=$url_file_ext, oo_cmd=$oo_cmd"
     ns_log Notice "index.vuh: im_exec bash -l -c \"export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip\""
     im_exec bash -l -c "export HOME=~${whoami}; $oo_cmd --headless --convert-to $url_file_ext --outdir /tmp/ $odp_zip"
